@@ -1,48 +1,43 @@
-from flask import Flask, render_template
-
+from flask import Flask, render_template, request
 from bokeh.embed import components
 from bokeh.plotting import figure
 from bokeh.resources import INLINE
 from bokeh.util.string import encode_utf8
-
+import json
+import view_definitions as viewdefs
 
 app = Flask(__name__)
 
-
 @app.route('/')
 def index():
-    return 'Hello, World!'
-
-
-@app.route('/bokeh')
-def bokeh():
-
-    # init a basic bar chart:
-    # http://bokeh.pydata.org/en/latest/docs/user_guide/plotting.html#bars
-    fig = figure(plot_width=600, plot_height=600)
-    fig.vbar(
-        x=[1, 2, 3, 4],
-        width=0.5,
-        bottom=0,
-        top=[1.7, 2.2, 4.6, 3.9],
-        color='navy'
-    )
-
     # grab the static resources
     js_resources = INLINE.render_js()
     css_resources = INLINE.render_css()
 
     # render template
-    script, div = components(fig)
     html = render_template(
         'index.html',
-        plot_script=script,
-        plot_div=div,
         js_resources=js_resources,
         css_resources=css_resources,
     )
     return encode_utf8(html)
 
+@app.route('/get_filters/<name>', methods=['GET'])
+def get_filters(name):
+    return json.dumps(viewdefs.views[name]['filters'])
+    
+@app.route('/get_view/<name>', methods=['POST'])
+def get_view(name):
+    arguments = json.loads(request.data)
+    view = viewdefs.views[name]['get_view'](arguments)
+    # render template
+    script, div = components(view)
+    html = render_template(
+        'chart.html',
+        plot_script=script,
+        plot_div=div
+    )
+    return encode_utf8(html)
 
 if __name__ == '__main__':
     app.run(debug=True)

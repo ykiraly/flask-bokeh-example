@@ -3,12 +3,31 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <title>Embed Demo</title>
+    <title>CAO Dashboard Demo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chosen/docsupport/prism.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chosen/chosen.min.css') }}">
     {{ js_resources|indent(4)|safe }}
     {{ css_resources|indent(4)|safe }}
-    {{ plot_script|indent(4)|safe }}
   </head>
-  <body>
-    {{ plot_div|indent(4)|safe }}
+  <body id="docbody">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+          integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+          crossorigin="anonymous">
+    </script>
+    <div>
+        <h1>Interactive Bokeh Sample</h1>
+        <p>
+        <div id="filters">
+        </div>
+        </p>
+        <button id="generate">Generate</button>
+        <p>
+        <div id="container"></div>
+        </p>
+    </div>
+    <script src="{{ url_for('static', filename='js/chosen/chosen.jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/controller.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chosen/docsupport/prism.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chosen/docsupport/init.js') }}"></script>
   </body>
 </html>
